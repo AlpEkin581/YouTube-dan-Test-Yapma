@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergent | Quiz AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #FDFCF8; font-family: sans-serif; }
+        
+        /* Neubrutalism Kart Stili */
+        .nb-card {
+            background: white;
+            border: 3px solid black;
+            box-shadow: 6px 6px 0px 0px rgba(0,0,0,1);
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+        }
+
+        /* Başlıklar */
+        .nb-label {
+            font-weight: 900;
+            text-transform: uppercase;
+            color: #4B5563;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Inputlar */
+        .nb-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid black;
+            border-radius: 10px;
+            font-weight: 600;
+            outline: none;
+        }
+        .nb-input:focus { border-color: #FFE358; }
+
+        /* Sarı Buton */
+        .nb-btn {
+            width: 100%;
+            background-color: #FFE358;
+            border: 3px solid black;
+            padding: 18px;
+            font-weight: 900;
+            font-size: 20px;
+            border-radius: 16px;
+            box-shadow: 5px 5px 0px 0px rgba(0,0,0,1);
+            cursor: pointer;
+            transition: all 0.1s;
+        }
+        .nb-btn:active {
+            box-shadow: none;
+            transform: translate(3px, 3px);
+        }
+    </style>
+</head>
+<body class="p-6 max-w-lg mx-auto">
+
+    <h1 class="text-center font-black text-xl mb-6 uppercase italic">Emergent | Fullstack App</h1>
+
+    <div class="nb-card">
+        <label class="nb-label">
+            <span style="background:#FFE358; border:2px solid black; padding:4px; border-radius:6px;">▶️</span>
+            YouTube Video Linki
+        </label>
+        <input type="text" id="ytUrl" placeholder="https://www.youtube.com..." class="nb-input">
+    </div>
+
+    <div class="nb-card">
+        <label class="nb-label">AI Modeli</label>
+        <select id="aiModel" class="nb-input">
+            <option value="gpt-4o">OpenAI GPT-4o</option>
+            <option value="gpt-3.5-turbo">OpenAI GPT-3.5</option>
+            <option value="gemini-1.5">Google Gemini 1.5</option>
+        </select>
+    </div>
+
+    <div class="nb-card">
+        <label class="nb-label" id="countLabel">Soru Sayısı: 10</label>
+        <input type="range" id="qCount" min="1" max="20" value="10" class="w-full accent-black" 
+               oninput="document.getElementById('countLabel').innerText = 'Soru Sayısı: ' + this.value">
+    </div>
+
+    <button class="nb-btn" onclick="generateQuiz()">✨ SINAV OLUŞTUR</button>
+
+    <div id="result" class="mt-8 hidden">
+        <div class="nb-card border-dashed bg-yellow-50">
+            <h3 class="font-black mb-2 uppercase">Sınav Soruların:</h3>
+            <div id="quizContent" class="text-sm space-y-4"></div>
+        </div>
+    </div>
+
+    <script>
+        async function generateQuiz() {
+            const url = document.getElementById('ytUrl').value;
+            const model = document.getElementById('aiModel').value;
+            const count = document.getElementById('qCount').value;
+
+            if(!url) return alert("Lütfen link gir!");
+
+            const btn = document.querySelector('.nb-btn');
+            btn.innerText = "⏳ OLUŞTURULUYOR...";
+            
+            // NOT: Tarayıcı üzerinden doğrudan YouTube altyazısı çekmek zordur (CORS).
+            // Bu kısım bir backend servisine (Vercel/Heroku) istek atmalıdır.
+            // Şimdilik mantığı simüle ediyoruz:
+            setTimeout(() => {
+                document.getElementById('result').classList.remove('hidden');
+                document.getElementById('quizContent').innerHTML = `
+                    <p><b>Soru 1:</b> Videoda bahsedilen ana konu nedir?</p>
+                    <p>A) Kodlama B) Futbol C) Robotik D) Hepsi</p>
+                `;
+                btn.innerText = "✨ SINAV OLUŞTUR";
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
