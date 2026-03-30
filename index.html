@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alptech | Quiz AI</title>
+    <title>Alptech | Quiz AI v3</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { background-color: #FDFCF8; font-family: sans-serif; color: black; }
@@ -16,20 +16,21 @@
         .nb-input { width: 100%; padding: 14px; border: 2.5px solid black; border-radius: 12px; font-weight: 600; outline: none; }
         .nb-btn {
             width: 100%; background-color: #FFE358; border: 3px solid black;
-            padding: 20px; font-weight: 900; font-size: 20px; border-radius: 20px;
+            padding: 20px; font-weight: 900; font-size: 22px; border-radius: 20px;
             box-shadow: 5px 5px 0px 0px rgba(0,0,0,1); cursor: pointer; transition: 0.1s;
         }
         .nb-btn:active { box-shadow: none; transform: translate(3px, 3px); }
-        #loading { display: none; text-align: center; font-weight: 800; margin-top: 15px; color: #d97706; }
+        #loading { display: none; text-align: center; font-weight: 800; margin-top: 15px; color: #d97706; font-style: italic; }
+        .answer-key { color: #059669; font-weight: 800; margin-top: 10px; border-top: 1px dashed black; padding-top: 5px; }
     </style>
 </head>
 <body class="p-6 max-w-xl mx-auto">
 
-    <h1 class="text-center font-black text-2xl mb-8 uppercase italic tracking-tighter">Alptech | Quiz AI</h1>
+    <h1 class="text-center font-black text-3xl mb-8 uppercase italic tracking-tighter">Alptech | Quiz AI v3</h1>
 
     <div class="nb-card">
         <label class="nb-label">📺 YouTube Video Linki</label>
-        <input type="text" id="ytUrl" placeholder="https://www.youtube.com/..." class="nb-input">
+        <input type="text" id="ytUrl" placeholder="Videonun linkini buraya yapıştır..." class="nb-input">
     </div>
 
     <div class="nb-card">
@@ -38,20 +39,20 @@
                oninput="document.getElementById('countLabel').innerText = 'Soru Sayısı: ' + this.value">
     </div>
 
-    <button class="nb-btn" id="mainBtn" onclick="startQuiz()">✨ SINAV OLUŞTUR</button>
-    <div id="loading">⏳ Alptech AI videoyu inceliyor ve soruları hazırlıyor...</div>
+    <button class="nb-btn" id="mainBtn" onclick="startQuiz()">🔥 SINAV OLUŞTUR</button>
+    <div id="loading">⚡ Alptech Yapay Zeka videoyu saniyeler içinde analiz ediyor...</div>
 
     <div id="resultArea" class="mt-8 hidden text-left">
-        <div class="nb-card bg-green-50 border-dashed">
-            <h3 class="font-black text-xl mb-4 border-b-2 border-black pb-2 uppercase">📝 Sınav Kağıdın</h3>
+        <div class="nb-card bg-yellow-50">
+            <h3 class="font-black text-xl mb-4 border-b-2 border-black pb-2 uppercase text-center">🎯 Alptech Sınav Sonucu</h3>
             <div id="quizContent" style="white-space: pre-wrap;" class="font-medium leading-relaxed"></div>
         </div>
     </div>
 
     <script>
         async function startQuiz() {
-            // ⬇️ KEYİ YAZMAN GEREKEN YER BURASI (Tırnak işaretleri arasına yapıştır)
-            const key = "AIzaSyAo3-SPgp9V3wfzjNpe7i9G9c1PnGZVF78"; 
+            // Key buraya gömüldü
+            const key = "AIzaSyCxCkKSkM5PzQWLGn7GuFPjVtYAwLW1cjM"; 
             
             const url = document.getElementById('ytUrl').value;
             const count = document.getElementById('qCount').value;
@@ -60,22 +61,21 @@
             const resultDiv = document.getElementById('resultArea');
             const quizContent = document.getElementById('quizContent');
 
-            if (!url) return alert("Lütfen bir YouTube linki gir!");
-            if (key.includes("BURAYA")) return alert("Lütfen kodun içindeki API Key kısmını kendi anahtarınla değiştir!");
+            if (!url) return alert("Lütfen bir YouTube linki gir kanka!");
 
             btn.style.display = 'none';
             loading.style.display = 'block';
             resultDiv.classList.add('hidden');
 
             try {
-                // Buradaki URL 'v1' olarak güncellendi, artık hata vermeyecektir
+                // En güncel v1 API ve Flash modelini kullanıyoruz
                 const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${key}`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
                         contents: [{
                             parts: [{
-                                text: `Sen Alptech AI'sın. Aşağıdaki YouTube videosunun içeriğini analiz et ve bu içeriğe dayalı tam olarak ${count} adet çoktan seçmeli Türkçe test sorusu hazırla. Her sorunun doğru cevabını belirt. Video: ${url}`
+                                text: `Sen Alptech AI'sın. Bu videoyu analiz et: ${url}. İçeriğe göre ${count} tane çoktan seçmeli Türkçe soru hazırla. Sorular kaliteli olsun. En sona da doğru cevapları ekle.`
                             }]
                         }]
                     })
@@ -84,20 +84,23 @@
                 const data = await response.json();
 
                 if (data.error) {
-                    alert("Hata: " + data.error.message);
+                    alert("Google Hatası: " + data.error.message);
                 } else {
                     const aiResponse = data.candidates[0].content.parts[0].text;
                     quizContent.innerText = aiResponse;
                     resultDiv.classList.remove('hidden');
                 }
             } catch (error) {
-                alert("Bağlantı hatası!");
+                alert("Alptech Sunucusu: Bağlantı kurulamadı!");
                 console.error(error);
             } finally {
                 btn.style.display = 'block';
                 loading.style.display = 'none';
             }
         }
+    </script>
+</body>
+</html>
     </script>
 </body>
 </html>
